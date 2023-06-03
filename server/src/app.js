@@ -5,7 +5,8 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { typeDefs, resolvers } from './schema.js';
+import { typeDefs } from './schema.js';
+import { resolvers } from './resolvers.js';
 
 const app = express();
 

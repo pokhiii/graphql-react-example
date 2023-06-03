@@ -1,2 +1,0 @@
-# graphql-react-example
-
