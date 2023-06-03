@@ -1,3 +1,5 @@
+import db from './db.js'
+
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
 // your data.
@@ -23,31 +25,14 @@ export const typeDefs = `#graphql
 // This resolver retrieves books from the "books" array above.
 export const resolvers = {
   Query: {
-    books: () => books,
+    books: async () => {
+      try {
+        const [rows] = await db.execute('SELECT * FROM books');
+        return rows;
+      } catch (error) {
+        console.log(error)
+        throw new Error('Failed to fetch books from the database.');
+      }
+    },
   },
 };
-
-// These books can be fetched from database (like Postgres)
-// using appropriate database connector.
-const books = [
-  {
-    id: '1',
-    title: 'The Awakening',
-    author: 'Kate Chopin',
-  },
-  {
-    id: '2',
-    title: 'City of Glass',
-    author: 'Paul Auster',
-  },
-  {
-    id: '3',
-    title: 'Becoming a Technical Leader',
-    author: 'GMW',
-  },
-    {
-    id: '4',
-    title: 'Purple Cow',
-    author: 'Seth Godin',
-  },
-];
