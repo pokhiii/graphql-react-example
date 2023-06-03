@@ -1,7 +1,10 @@
+import React, {useEffect, useState} from 'react';
+
 import logo from './logo.svg';
 import './App.css';
 
-const BookCard = ({ id, title, author }) => (
+const BookCard = ({ id, title, author }) => {
+  return (
   <div className="book-card">
     <div className="book-cover">
     </div>
@@ -12,26 +15,39 @@ const BookCard = ({ id, title, author }) => (
     </div>
   </div>
   )
+}
 
 function App() {
-  // hardcoded books
-  const books = [
-            {
-                "id": "1",
-                "title": "The Awakening",
-                "author": "Kate Chopin"
-            },
-            {
-                "id": "2",
-                "title": "City of Glass",
-                "author": "Paul Auster"
-            },
-            {
-                "id": "3",
-                "title": "Becoming a Technical Leader",
-                "author": "GMW"
-            }
-        ]
+  const [books, setBooks] = useState([])
+
+  const sideEffect = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      "query": "query GetBooks { books { id title author } }",
+      "variables": {},
+      "operationName": "GetBooks"
+    });
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+
+    fetch("http://localhost:4000/", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        setBooks(result.data.books)
+      })
+      .catch(error => console.log('error', error));
+
+  }
+  const dependencies = []
+
+  useEffect(sideEffect, dependencies);
 
   return (
     <div className="App">
