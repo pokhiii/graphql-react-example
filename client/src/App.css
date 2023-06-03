@@ -1,0 +1,40 @@
+.App {
+/*  text-align: center;*/
+  width: 100%;
+  padding: 0 16px;
+}
+
+.books {
+  width: 400px;
+}
+
+.book-card-wrapper {
+  margin-bottom: 16px;
+}
+
+
+.book-card {
+  display: flex;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px 10px;
+}
+
+.book-cover {
+  width: 100px; 
+  height: 100px; 
+  background-color: #eeeeee;
+  margin-right: 8px;
+}
+
+.book-details .title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.book-details .author {
+  margin-bottom: 8px;
+}
+
+.book-details .id {
+  margin-bottom: 8px;
+}
