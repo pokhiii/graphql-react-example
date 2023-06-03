@@ -45,4 +45,9 @@ const books = [
     title: 'Becoming a Technical Leader',
     author: 'GMW',
   },
+    {
+    id: '4',
+    title: 'Purple Cow',
+    author: 'Seth Godin',
+  },
 ];
