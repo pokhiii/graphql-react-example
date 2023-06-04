@@ -3,34 +3,56 @@ import './App.css';
 
 const BookCard = ({ id, title, author }) => {
   return (
-  <div className="card">
-    <div className="card-body">
-      <div>{title}</div>
-      <div>{author}</div>
-      <div>{id}</div>
+    <div className="card">
+      <div className="card-body">
+        <div>{title}</div>
+        <div>{author}</div>
+        <div>{id}</div>
+      </div>
     </div>
-  </div>
   )
 }
 
 const CreateBookForm = ({ onSubmit }) => {
+  const [values, setValues] = useState({
+    title: '',
+    author: ''
+  })
+
   return (
     <form onSubmit={onSubmit}>
       <div className="form-group mb-3">
-        <input type="text" name="title" required="required" placeholder="Title" className="form-control" />
+        <input
+          type="text"
+          name="title"
+          required="required"
+          placeholder="Title"
+          className="form-control"
+          value={values.title}
+          onChange={(evt) => setValues({ ...values, title: evt.target.value })}
+        />
       </div>
 
       <div className="form-group mb-3">
-        <input type="text" name="author" required="required" placeholder="Author" className="form-control" />
+        <input
+          type="text"
+          name="author"
+          required="required"
+          placeholder="Author"
+          className="form-control"
+          value={values.author}
+          onChange={(evt) => setValues({ ...values, author: evt.target.value })}
+        />
       </div>
 
-      <button className="btn btn-primary">Add book</button>
+      <button type="button" onClick={() => onSubmit(values, setValues)} className="btn btn-primary">Add book</button>
     </form>
   )
 }
 
 function App() {
   const [books, setBooks] = useState([])
+  const [bookAdded, setBookAdded] = useState(false)
 
   const sideEffect = () => {
     var myHeaders = new Headers();
@@ -57,23 +79,17 @@ function App() {
       .catch(error => console.log('error', error));
 
   }
-  const dependencies = []
+  const dependencies = [bookAdded]
 
   useEffect(sideEffect, dependencies);
 
-  const onSubmit = (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-
-    const bookData = Object.fromEntries(formData);
-
+  const onSubmit = (values, setValues) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
       "query": "mutation CreateBook($title: String, $author: String) { addBook(title: $title, author: $author) { id title } }",
-      "variables": bookData,
+      "variables": values,
       "operationName": "CreateBook"
     });
 
@@ -86,7 +102,13 @@ function App() {
 
     fetch("http://localhost:4000/", requestOptions)
       .then(response => response.json())
-      .then(result => console.log(result))
+      .then(result => {
+        setValues({
+          title: '',
+          author: '',
+        })
+        setBookAdded(result.data.addBook.id)
+      })
       .catch(error => console.log('error', error));
   }
 
