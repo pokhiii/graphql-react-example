@@ -12,4 +12,19 @@ export const resolvers = {
       }
     },
   },
+
+  Mutation: {
+    addBook: async (parent, args, context, info) => {
+      const { title, author } = args
+
+      try {
+        const [{insertId}] = await db.execute(`INSERT INTO books (title, author) VALUES ("${title}", "${author}");`);
+        const [rows] = await db.execute(`SELECT * FROM books WHERE id = ${insertId}`);
+        return rows[0];
+      } catch (error) {
+        console.log(error)
+        throw new Error('Failed to insert book to the database.');
+      }
+    }
+  }
 };

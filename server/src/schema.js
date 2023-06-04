@@ -8,4 +8,8 @@ export const typeDefs = `
   type Query {
     books: [Book]
   }
+
+  type Mutation {
+    addBook(title: String, author: String): Book
+  }
 `;
