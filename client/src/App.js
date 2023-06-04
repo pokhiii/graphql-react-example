@@ -68,7 +68,26 @@ function App() {
 
     const bookData = Object.fromEntries(formData);
 
-    console.log(bookData)
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      "query": "mutation CreateBook($title: String, $author: String) { addBook(title: $title, author: $author) { id title } }",
+      "variables": bookData,
+      "operationName": "CreateBook"
+    });
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+
+    fetch("http://localhost:4000/", requestOptions)
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
   }
 
   return (
@@ -79,15 +98,18 @@ function App() {
         <div className="d-flex">
           <div className="w-50">
             <h2>List</h2>
-            {books.map(book => (
-              <div className="mb-3" key={book.id}>
-              <BookCard
-                id={book.id}
-                title={book.title}
-                author={book.author}
-              />
-              </div>
-            ))}
+            {books.length ?
+              books.map(book => (
+                <div className="mb-3" key={book.id}>
+                  <BookCard
+                    id={book.id}
+                    title={book.title}
+                    author={book.author}
+                  />
+                </div>
+              ) ) : (
+              <div className="alert alert-info">No books to show.</div>
+            )}
           </div>
 
           <div className="w-50 px-5">

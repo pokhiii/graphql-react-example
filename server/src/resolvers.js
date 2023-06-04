@@ -4,7 +4,7 @@ export const resolvers = {
   Query: {
     books: async () => {
       try {
-        const [rows] = await db.execute('SELECT * FROM books');
+        const [rows] = await db.execute('SELECT * FROM books ORDER BY created_at DESC');
         return rows;
       } catch (error) {
         console.log(error)
