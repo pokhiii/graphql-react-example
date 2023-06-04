@@ -1,19 +1,31 @@
 import React, {useEffect, useState} from 'react';
-
-import logo from './logo.svg';
 import './App.css';
 
 const BookCard = ({ id, title, author }) => {
   return (
-  <div className="book-card">
-    <div className="book-cover">
-    </div>
-    <div className="book-details">
-      <div className="title">{title}</div>
-      <div className="author">{author}</div>
-      <div className="id">{id}</div>
+  <div className="card">
+    <div className="card-body">
+      <div>{title}</div>
+      <div>{author}</div>
+      <div>{id}</div>
     </div>
   </div>
+  )
+}
+
+const CreateBookForm = ({ onSubmit }) => {
+  return (
+    <form onSubmit={onSubmit}>
+      <div className="form-group mb-3">
+        <input type="text" name="title" required="required" placeholder="Title" className="form-control" />
+      </div>
+
+      <div className="form-group mb-3">
+        <input type="text" name="author" required="required" placeholder="Author" className="form-control" />
+      </div>
+
+      <button className="btn btn-primary">Add book</button>
+    </form>
   )
 }
 
@@ -49,19 +61,40 @@ function App() {
 
   useEffect(sideEffect, dependencies);
 
+  const onSubmit = (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+
+    const bookData = Object.fromEntries(formData);
+
+    console.log(bookData)
+  }
+
   return (
     <div className="App">
-      <div className="books">
+      <div className="container">
         <h1>Books</h1>
-        {books.map(book => (
-          <div className="book-card-wrapper" key={book.id}>
-          <BookCard
-            id={book.id}
-            title={book.title}
-            author={book.author}
-          />
+
+        <div className="d-flex">
+          <div className="w-50">
+            <h2>List</h2>
+            {books.map(book => (
+              <div className="mb-3" key={book.id}>
+              <BookCard
+                id={book.id}
+                title={book.title}
+                author={book.author}
+              />
+              </div>
+            ))}
           </div>
-        ))}
+
+          <div className="w-50 px-5">
+            <h2>Create</h2>
+            <CreateBookForm onSubmit={onSubmit} />
+          </div>
+        </div>
       </div>
     </div>
   );
